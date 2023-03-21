@@ -1,16 +1,22 @@
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
 import { Video, VideoWithKeyword } from "../interfaces/Video";
+import { YoutubeClass } from "./youtube";
 
-export default class FakeYoutube {
-  constructor() {}
+export default class FakeYoutube implements YoutubeClass {
+  httpClient: AxiosInstance;
+  constructor() {
+    this.httpClient = axios.create({
+      baseURL: "/videos/",
+    });
+  }
 
   async search(keyword: string | undefined) {
     return keyword ? this.#searchByKeyword(keyword) : this.#mostPopular();
   }
 
   async #searchByKeyword(keyword: string): Promise<Video[]> {
-    return axios
-      .get(`/videos/search.json`)
+    return this.httpClient
+      .get(`/search.json`)
       .then((res) => res.data.items)
       .then((items) =>
         items.map((item: VideoWithKeyword) => ({
@@ -21,6 +27,6 @@ export default class FakeYoutube {
   }
 
   async #mostPopular(): Promise<Video[]> {
-    return axios.get(`/videos/popular.json`).then((res) => res.data.items);
+    return this.httpClient.get(`/popular.json`).then((res) => res.data.items);
   }
 }
