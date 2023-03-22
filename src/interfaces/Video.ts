@@ -1,4 +1,4 @@
-export interface Video {
+export interface CommonVideo {
   kind: string;
   etag: string;
   id: string;
@@ -8,31 +8,35 @@ export interface Video {
     title: string;
     description: string;
     channelTitle: string;
-    tags?: string[];
-    categoryId?: string;
     thumbnails: {
       [key: string]: {
         url: string;
-        width?: string;
-        height?: string;
+        width: number;
+        height: number;
       };
     };
     liveBroadcastContent: string;
-    defaultAudioLanguage?: string;
-    localized?: {
-      description: string;
-      title: string;
-    };
   };
 }
 
-export interface VideoWithKeyword {
-  kind: string;
+// https://developers.google.com/youtube/v3/docs/videos/list
+export interface VideoListResponse {
+  kind: "youtube#videoListResponse";
   etag: string;
-  id: {
-    kind: string;
-    videoId: string;
+  nextPageToken?: string;
+  prevPageToken?: string;
+  pageInfo?: {
+    totalResults: number;
+    resultsPerPage: number;
   };
+  items: Video[];
+}
+
+// https://developers.google.com/youtube/v3/docs/videos#resource
+export interface Video {
+  kind: "youtube#video";
+  etag: string;
+  id: string;
   snippet: {
     publishedAt: string;
     channelId: string;
@@ -42,11 +46,17 @@ export interface VideoWithKeyword {
     thumbnails: {
       [key: string]: {
         url: string;
-        width?: string;
-        height?: string;
+        width: number;
+        height: number;
       };
     };
+    tags?: string[];
+    categoryId: string;
     liveBroadcastContent: string;
-    publishTime: string;
+    localized: {
+      title: string;
+      description: string;
+    };
+    defaultAudioLanguage?: string;
   };
 }
