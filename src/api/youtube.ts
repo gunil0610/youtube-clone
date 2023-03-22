@@ -1,10 +1,11 @@
-import axios, { AxiosInstance } from "axios";
-import { Video, VideoWithKeyword } from "../interfaces/Video";
+import { CommonVideo, Video } from "../interfaces/Video";
 import { YoutubeClientClass } from "./youtubeClient";
 
 export interface YoutubeClass {
   apiClient: YoutubeClientClass;
-  search(keyword: string | undefined): Promise<Video[]>;
+  search(keyword: string | undefined): Promise<CommonVideo[]>;
+  channelImageURL(id: string): Promise<string>;
+  relatedVideos(id: string): Promise<CommonVideo[]>;
 }
 
 export default class Youtube implements YoutubeClass {
@@ -18,7 +19,30 @@ export default class Youtube implements YoutubeClass {
     return keyword ? this.#searchByKeyword(keyword) : this.#mostPopular();
   }
 
-  async #searchByKeyword(keyword: string): Promise<Video[]> {
+  async channelImageURL(id: string) {
+    return this.apiClient
+      .channels({ params: { part: "snippet", id } })
+      .then((res) => res.data.items[0].snippet.thumbnails.default.url);
+  }
+  async relatedVideos(id: string) {
+    return this.apiClient
+      .search({
+        params: {
+          part: "snippet",
+          maxResults: 25,
+          type: "video",
+          relatedToVideoId: id,
+        },
+      })
+      .then((res) =>
+        res.data.items.map((item) => ({
+          ...item,
+          id: item.id.videoId,
+        }))
+      );
+  }
+
+  async #searchByKeyword(keyword: string): Promise<CommonVideo[]> {
     return this.apiClient
       .search({
         params: {
@@ -28,9 +52,8 @@ export default class Youtube implements YoutubeClass {
           q: keyword,
         },
       })
-      .then((res) => res.data.items)
-      .then((items) =>
-        items.map((item: VideoWithKeyword) => ({
+      .then((res) =>
+        res.data.items.map((item) => ({
           ...item,
           id: item.id.videoId,
         }))

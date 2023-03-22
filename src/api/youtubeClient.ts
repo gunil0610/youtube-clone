@@ -1,9 +1,19 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
+import { ChannelResponse } from "../interfaces/Channel";
+import { VideoSearchListResponse } from "../interfaces/Search";
+import { VideoListResponse } from "../interfaces/Video";
 
 export interface YoutubeClientClass {
   httpClient: AxiosInstance;
-  search(params: AxiosRequestConfig<any>): Promise<AxiosResponse<any, any>>;
-  videos(params: AxiosRequestConfig<any>): Promise<AxiosResponse<any, any>>;
+  search(
+    params: AxiosRequestConfig<any>
+  ): Promise<AxiosResponse<VideoSearchListResponse, any>>;
+  videos(
+    params: AxiosRequestConfig<any>
+  ): Promise<AxiosResponse<VideoListResponse, any>>;
+  channels(
+    params: AxiosRequestConfig<any>
+  ): Promise<AxiosResponse<ChannelResponse, any>>;
 }
 
 export default class YoutubeClient implements YoutubeClientClass {
@@ -21,5 +31,8 @@ export default class YoutubeClient implements YoutubeClientClass {
   }
   async videos(params: AxiosRequestConfig<any>) {
     return this.httpClient.get("videos", params);
+  }
+  async channels(params: AxiosRequestConfig<any>) {
+    return this.httpClient.get("channels", params);
   }
 }

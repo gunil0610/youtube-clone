@@ -15,7 +15,6 @@ export default function Videos() {
 
   return (
     <section className="px-4">
-      <h1>Videos {keyword ? `🔍${keyword}` : "🔥"}</h1>
       <>
         {isLoading && <p>Loading...</p>}
         {error && <p>Something went wrong</p>}
