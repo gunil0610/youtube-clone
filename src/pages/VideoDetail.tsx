@@ -17,7 +17,7 @@ export default function VideoDetail() {
           title={`${video.snippet.title}`}
           width="100%"
           height="640"
-          src={`http://www.youtube.com/embed/${video.id}`}
+          src={`https://www.youtube.com/embed/${video.id}`}
           // frameborder="0"
         ></iframe>
         <div className="p-4">
