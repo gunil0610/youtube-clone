@@ -8,8 +8,6 @@ function App() {
     defaultOptions: {
       queries: {
         refetchOnWindowFocus: false,
-        staleTime: Infinity,
-        cacheTime: 1000 * 60 * 10,
       },
     },
   });

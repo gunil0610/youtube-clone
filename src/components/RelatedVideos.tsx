@@ -17,7 +17,9 @@ const RelatedVideos: React.FC<RelatedVideosProps> = ({ id }) => {
     isLoading,
     error,
     data: videos,
-  } = useQuery(["relatedVideos", id], () => youtube.relatedVideos(id));
+  } = useQuery(["relatedVideos", id], () => youtube.relatedVideos(id), {
+    staleTime: 1000 * 60 * 5,
+  });
 
   return (
     <>

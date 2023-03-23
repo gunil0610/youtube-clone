@@ -16,7 +16,7 @@ const ChannelInfo: React.FC<ChannelInfoProps> = ({ id, name }) => {
   const { data: url } = useQuery(
     ["channel", id],
     () => youtube.channelImageURL(id),
-    { suspense: true }
+    { suspense: true, staleTime: 1000 * 60 * 5 }
   );
 
   return (
